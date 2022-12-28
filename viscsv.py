@@ -32,7 +32,7 @@ def read_data(frame, x_choice, y_choice):
     for k in range(0, len(data[0])):
         column = []
         for i in range(1, len(data)):
-            column.append(int(data[i][k]))
+            column.append(float(data[i][k]))
         columns.append(column)
 
         """radiobuttons"""
@@ -55,24 +55,28 @@ def read_data(frame, x_choice, y_choice):
         k = k+1
         
 def show_data(frame, x_choice, y_choice):
+    save_image(x_choice, y_choice)
+    window = tk.Toplevel(frame)
+    #canvas = tk.Canvas(window, bg="black")
+    img = tk.PhotoImage(file= "diagram.png")
+    #img = img.subsample(2, 2)
+    label = tk.Label(window, image=img)
+    label.image = img
+    label.grid(column=0, row=0)
+    #canvas.create_image(200, 200, anchor="nw", image = img)
+    #canvas.grid(column=3, row=2)
+
+def save_image(x_choice, y_choice):
     x = columns[x_choice]
     y = columns[y_choice]
     x_axis = head[x_choice]
     y_axis = head[y_choice]
+    plt.close()
     plt.plot(x, y)
     plt.xlabel(x_axis)
     plt.ylabel(y_axis)
     img_string = "diagram.png"
     plt.savefig(img_string)
-    window = tk.Toplevel(frame)
-    #canvas = tk.Canvas(window, bg="black")
-    img = tk.PhotoImage(file= img_string)
-    #img = img.subsample(2, 2)
-    tk.Label(window, image=img).grid(column=0, row=0)
-    #canvas.create_image(200, 200, anchor="nw", image = img)
-    #canvas.grid(column=3, row=2)
-
-
 
 root = tk.Tk()
 root.geometry('800x600')
@@ -87,7 +91,8 @@ tk.Label(frame, text="y - Werte").grid(column=1, row=2)
 x_choice = tk.StringVar(root, "0")
 y_choice = tk.StringVar(root, "0")
 
-tk.Button(frame, text="Diagramm anzeigen", command = lambda: show_data(frame, int(x_choice.get()), int(y_choice.get()))).grid(column=3, row=1)
+tk.Button(frame, text="Diagramm speichern", command= lambda: save_image(int(x_choice.get()), int(y_choice.get()))).grid(column=1, row=1)
+tk.Button(frame, text="Diagramm anzeigen", command = lambda: show_data(frame, int(x_choice.get()), int(y_choice.get()))).grid(column=2, row=1)
 
 
 root.mainloop()
